@@ -1,5 +1,18 @@
+import db from "../../lib/firebase";
+import { useState, useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+
 export const Incomplete = (props) => {
 	const { incompleteTodos, onClickDelete, onClickComplete } = props;
+	const [posts, setPosts] = useState([]);
+
+	useEffect(() => {
+		const postData = collection(db, "posts");
+		getDocs(postData).then((snapShot) => {
+			setPosts(snapShot.docs.map((doc) => ({ ...doc.data() })));
+		});
+	}, []);
+
 	return (
 		<div className="w-1/2 bg-indigo-400">
 			<h1 className="my-3 text-center text-white">IncompleteArea</h1>

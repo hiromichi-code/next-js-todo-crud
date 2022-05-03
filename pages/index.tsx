@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Input from "./Input";
-import { Incomplete } from "./components/InComplete";
+import { Incomplete } from "./components/Incomplete";
 import { Complete } from "./components/Complete";
 import { useState } from "react";
 

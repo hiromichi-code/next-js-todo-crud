@@ -5,8 +5,8 @@ export const Complete = (props) => {
 			<h1 className="my-3 text-center">CompleteArea</h1>
 			{completeTodos.map((todo, index) => {
 				return (
-					<ul>
-						<div key={todo} className="w-64 mx-auto mb-5 flex justify-center">
+					<ul key={todo}>
+						<div className="w-64 mx-auto mb-5 flex justify-center">
 							<li className="text-white py-2">{todo}</li>
 							<button
 								onClick={() => onClickBack(index)}

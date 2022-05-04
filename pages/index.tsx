@@ -1,20 +1,24 @@
 import Head from "next/head";
-import Input from "./Input";
-import { Incomplete } from "./components/Incomplete";
-import { Complete } from "./components/Complete";
-import { useState } from "react";
+import Input from "../components/Input";
+import { Incomplete } from "../components/Incomplete";
+import { Complete } from "../components/Complete";
+import { useState, useEffect } from "react";
+import db from "../lib/firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 export default function Home() {
 	const [todoText, setTodoText] = useState("");
 	const [incompleteTodos, setIncompleteTodos] = useState([]);
 	const [completeTodos, setCompleteTodos] = useState([]);
+	const [posts, setPosts] = useState([]);
 
 	const onChangeTodoText = (e) => setTodoText(e.target.value);
 
 	const onClickAdd = () => {
 		if (todoText === "") return;
-		const newTodos = [...incompleteTodos, todoText];
-		setIncompleteTodos(newTodos);
+		addDoc(collection(db, "posts"), { todo: todoText });
+		// const newTodos = [...incompleteTodos, todoText];
+		// setIncompleteTodos(newTodos);
 		setTodoText("");
 	};
 
@@ -40,6 +44,13 @@ export default function Home() {
 		setIncompleteTodos(newInCompleteTodos);
 	};
 
+	useEffect(() => {
+		const postData = collection(db, "posts");
+		getDocs(postData).then((snapShot) => {
+			setPosts(snapShot.docs.map((doc) => ({ ...doc.data() })));
+		});
+	}, []);
+
 	return (
 		<div className="w-screen">
 			<Head>
@@ -49,13 +60,13 @@ export default function Home() {
 			</Head>
 			<div className="h-screen w-5/6 mx-auto">
 				<Input
-					todoText={todoText}
+					todoText={posts}
 					onChange={onChangeTodoText}
 					onClick={onClickAdd}
 				/>
 				<div className="h-4/6 w-full flex">
 					<Incomplete
-						incompleteTodos={incompleteTodos}
+						// incompleteTodos={incompleteTodos}
 						onClickDelete={onClickDelete}
 						onClickComplete={onClickComplete}
 					/>
